@@ -43,7 +43,13 @@ function SetupScreen({ onStart }) {
   return (
     <div className="setup-screen">
       <div className="setup-topbar">
-        <div className="setup-title">🌤️ Weather Quiz</div>
+        <div className="setup-breadcrumb">
+  <a className="bc-home" href="https://hiroba.ca">Hiroba</a>
+  <span className="bc-sep">›</span>
+  <a className="bc-mid" href="https://hiroba.ca/quiz-hub/">Quiz Hub</a>
+  <span className="bc-sep">›</span>
+  <span className="bc-current">Schedule Quiz</span>
+</div>
         <div className="topbar-actions">
           <button className="qr-btn" onClick={() => setQrEnlarged(true)}>
             QR Code
