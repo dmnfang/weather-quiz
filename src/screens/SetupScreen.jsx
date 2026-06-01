@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { WEATHER, ACTIVITIES } from '../data.js'
 import './SetupScreen.css'
 
+const QR_URL = 'https://hiroba.ca/weather-quiz/'
+
 function SetupScreen({ onStart }) {
   const [slots, setSlots] = useState({
     sunny: null, cloudy: null, rainy: null, snowy: null,
   })
   const [selectedActivity, setSelectedActivity] = useState(null)
+  const [qrEnlarged, setQrEnlarged] = useState(false)
 
   const handleActivityDragStart = (e, activityId) => {
     e.dataTransfer.setData('activityId', activityId)
@@ -41,33 +44,37 @@ function SetupScreen({ onStart }) {
     <div className="setup-screen">
       <div className="setup-topbar">
         <div className="setup-title">🌤️ Weather Quiz</div>
-        <button
-          className="start-btn"
-          disabled={!canStart}
-          onClick={() => onStart(slots)}
-        >
-          Start Quiz
-        </button>
+        <div className="topbar-actions">
+          <button className="qr-btn" onClick={() => setQrEnlarged(true)}>
+            QR Code
+          </button>
+          <button
+            className="start-btn"
+            disabled={!canStart}
+            onClick={() => onStart(slots)}
+          >
+            Start Quiz
+          </button>
+        </div>
       </div>
 
       <div className="setup-body">
-        {/* Weather slots */}
         <div className="weather-slots">
           {WEATHER.map(w => {
             const activityId = slots[w.id]
             const activity = activityId ? getActivity(activityId) : null
             return (
               <div
-  key={w.id}
-  className={`weather-slot ${activity ? 'filled' : ''} ${selectedActivity && !activity ? 'paintable' : ''}`}
+                key={w.id}
+                className={`weather-slot ${activity ? 'filled' : ''} ${selectedActivity && !activity ? 'paintable' : ''}`}
                 onDragOver={handleDragOver}
                 onDrop={e => handleDrop(e, w.id)}
                 onClick={() => handleSlotClick(w.id)}
               >
                 <div className="weather-slot-header">
-  <img className="weather-icon" src={w.image} alt={w.en} />
-  <span className="weather-label">{w.en}</span>
-</div>
+                  <img className="weather-icon" src={w.image} alt={w.en} />
+                  <span className="weather-label">{w.en}</span>
+                </div>
                 {activity ? (
                   <div className="weather-slot-content">
                     <div className="slot-activity-img">
@@ -83,7 +90,6 @@ function SetupScreen({ onStart }) {
           })}
         </div>
 
-        {/* Activity palette */}
         <div className="activity-palette">
           <div className="palette-title">
             {selectedActivity
@@ -93,18 +99,30 @@ function SetupScreen({ onStart }) {
           <div className="activity-grid">
             {ACTIVITIES.map(activity => (
               <div
-  key={activity.id}
-  className={`activity-tile ${selectedActivity === activity.id ? 'selected' : ''}`}
-  draggable
-  onDragStart={e => handleActivityDragStart(e, activity.id)}
-  onClick={() => setSelectedActivity(prev => prev === activity.id ? null : activity.id)}
->
-  <img src={activity.image} alt={activity.en} />
-</div>
+                key={activity.id}
+                className={`activity-tile ${selectedActivity === activity.id ? 'selected' : ''}`}
+                draggable
+                onDragStart={e => handleActivityDragStart(e, activity.id)}
+                onClick={() => setSelectedActivity(prev => prev === activity.id ? null : activity.id)}
+              >
+                <img src={activity.image} alt={activity.en} />
+              </div>
             ))}
           </div>
         </div>
       </div>
+
+      {qrEnlarged && (
+        <div className="qr-overlay" onClick={() => setQrEnlarged(false)}>
+          <div className="qr-large">
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(QR_URL)}`}
+              alt="QR Code"
+            />
+            <div className="qr-url">{QR_URL}</div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
