@@ -2,14 +2,11 @@ import { useState } from 'react'
 import { WEATHER, ACTIVITIES } from '../data.js'
 import './SetupScreen.css'
 
-const QR_URL = 'https://hiroba.ca/weather-quiz/'
-
 function SetupScreen({ onStart }) {
   const [slots, setSlots] = useState({
     sunny: null, cloudy: null, rainy: null, snowy: null,
   })
   const [selectedActivity, setSelectedActivity] = useState(null)
-  const [qrEnlarged, setQrEnlarged] = useState(false)
 
   const handleActivityDragStart = (e, activityId) => {
     e.dataTransfer.setData('activityId', activityId)
@@ -44,24 +41,19 @@ function SetupScreen({ onStart }) {
     <div className="setup-screen">
       <div className="setup-topbar">
         <div className="setup-breadcrumb">
-  <a className="bc-home" href="https://hiroba.ca">Hiroba</a>
-  <span className="bc-sep">›</span>
-  <a className="bc-mid" href="https://hiroba.ca/quiz-hub/">Quiz Hub</a>
-  <span className="bc-sep">›</span>
-  <span className="bc-current">Schedule Quiz</span>
-</div>
-        <div className="topbar-actions">
-          <button className="qr-btn" onClick={() => setQrEnlarged(true)}>
-            QR Code
-          </button>
-          <button
-            className="start-btn"
-            disabled={!canStart}
-            onClick={() => onStart(slots)}
-          >
-            Start Quiz
-          </button>
+          <a className="bc-home" href="https://dmnfang.github.io">Home</a>
+          <span className="bc-sep">›</span>
+          <a className="bc-mid" href="https://dmnfang.github.io/quiz-hub/">Quiz Hub</a>
+          <span className="bc-sep">›</span>
+          <span className="bc-current">Weather Quiz</span>
         </div>
+        <button
+          className="start-btn"
+          disabled={!canStart}
+          onClick={() => onStart(slots)}
+        >
+          Start Quiz
+        </button>
       </div>
 
       <div className="setup-body">
@@ -117,18 +109,6 @@ function SetupScreen({ onStart }) {
           </div>
         </div>
       </div>
-
-      {qrEnlarged && (
-        <div className="qr-overlay" onClick={() => setQrEnlarged(false)}>
-          <div className="qr-large">
-            <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(QR_URL)}`}
-              alt="QR Code"
-            />
-            <div className="qr-url">{QR_URL}</div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
